@@ -25,10 +25,10 @@ Processor& System::Cpu()
 vector<Process>& System::Processes()
 { 
     std::vector<int> pid_list = LinuxParser::Pids();
-    processes_.resize(pid_list.size());
-    for(int id=0; id<pid_list.size(); ++id)
+    //processes_.resize(pid_list.size());
+    for(int id=0; id<int(pid_list.size()); ++id)
     {
-        processes_[id] = Process(id);
+        processes_.push_back(Process(id));
     }
 
     return processes_;

@@ -171,14 +171,32 @@ long LinuxParser::IdleJiffies(std::string processor_name)
 vector<string> LinuxParser::CpuUtilization(std::string processor_name)
 { 
   string filename = kProcDirectory + kStatFilename;
-  string cpu_value =  GetValue(filename, processor_name);
-
-  vector<string> cpu_details;
-  std::stringstream ss(cpu_value);
-
-  for(string word; ss >> word; )
+  std::ifstream stream(filename);
+  string line, key;
+  if( stream.is_open())
   {
-    cpu_details.push_back(word);
+    while(std::getline(stream, line))
+    {
+      std::stringstream ss(line);
+      ss >> key;
+
+      if(key == processor_name)
+      {
+        break;
+      }
+    }
+  }
+
+  //std::cout << line << std::endl;
+  vector<string> cpu_details;
+  std::stringstream ss(line);
+
+  string word;
+
+  while( ss >> word )
+  {
+    if( word != processor_name)
+      cpu_details.push_back(word);
   }
 
   return cpu_details;
